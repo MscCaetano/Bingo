@@ -1,1 +1,54 @@
-index.html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bingo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(15, 50px);
+      gap: 5px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .number {
+      background-color: blue;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .number.selected {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bingo - Marcador de Números</h1>
+  <div class="grid" id="bingoGrid"></div>
+
+  <script>
+    // Gera os números de 1 a 75
+    const grid = document.getElementById('bingoGrid');
+    for (let i = 1; i <= 75; i++) {
+      const div = document.createElement('div');
+      div.className = 'number';
+      div.textContent = i;
+      div.addEventListener('click', () => {
+        div.classList.toggle('selected');
+      });
+      grid.appendChild(div);
+    }
+  </script>
+</body>
+</html>
