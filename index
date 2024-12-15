@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Bingo - Marcador e Gerenciador de Cartelas</title>
+        <style>
+            body {
+                      font-family: Arial, sans-serif;
+                            text-align: center;
+            }
+                .grid {
+                          display: grid;
+                                grid-template-columns: repeat(15, 50px);
+                                      gap: 5px;
+                                            justify-content: center;
+                                                  margin-top: 20px;
+                }
+                    .number {
+                              background-color: blue;
+                                    color: white;
+                                          font-size: 20px;
+                                                display: flex;
+                                                      align-items: center;
+                                                            justify-content: center;
+                                                                  height: 50px;
+                                                                        border-radius: 5px;
+                                                                              cursor: pointer;
+                                                                                    transition: 0.3s;
+                    }
+                        .number.selected {
+                                  background-color: red;
+                        }
+                            .cartela-container {
+                                      border: 1px solid #ccc;
+                                            padding: 10px;
+                                                  margin: 10px;
+                                                        display: inline-block;
+                                                              text-align: center;
+                            }
+                                .cartela {
+                                          display: grid;
+                                                grid-template-columns: repeat(5, 50px);
+                                                      gap: 5px;
+                                                            margin: 10px auto;
+                                }
+                                    .cartela div {
+                                              background-color: lightgray;
+                                                    font-size: 18px;
+                                                          height: 50px;
+                                                                display: flex;
+                                                                      align-items: center;
+                                                                            justify-content: center;
+                                                                                  border: 1px solid #aaa;
+                                                                                        border-radius: 5px;
+                                                                                              cursor: pointer;
+                                    }
+                                        .cartela div.marked {
+                                                  background-color: green;
+                                                        color: white;
+                                        }
+                                            .status {
+                                                      font-size: 18px;
+                                                            margin: 5px 0;
+                                            }
+                                                .add-cartela {
+                                                          margin: 20px;
+                                                }
+                                                    input[type="text"] {
+                                                              width: 80px;
+                                                                    text-align: center;
+                                                    }
+                                                      </style>
+                                                      </head>
+                                                      <body>
+                                                        <h1>Bingo - Marcador e Cartelas</h1>
+                                                          <div class="grid" id="bingoGrid"></div>
+
+                                                            <button class="add-cartela" onclick="addCartela()">Adicionar Nova Cartela</button>
+                                                              <div id="cartelas"></div>
+
+                                                                <script>
+                                                                    // Números do marcador
+                                                                        const calledNumbers = new Set();
+                                                                            const cartelas = [];
+
+                                                                                // Gera os números do marcador (1 a 75)
+                                                                                    const grid = document.getElementById('bingoGrid');
+                                                                                        for (let i = 1; i <= 75; i++) {
+                                                                                                  const div = document.createElement('div');
+                                                                                                        div.className = 'number';
+                                                                                                              div.textContent = i;
+                                                                                                                    div.addEventListener('click', () => {
+                                                                                                                                div.classList.toggle('selected');
+                                                                                                                                        const num = parseInt(div.textContent);
+                                                                                                                                                if (calledNumbers.has(num)) {
+                                                                                                                                                              calledNumbers.delete(num);
+                                                                                                                                                } else {
+                                                                                                                                                              calledNumbers.add(num);
+                                                                                                                                                }
+                                                                                                                                                        checkAllCartelas();
+                                                                                                                    });
+                                                                                                                          grid.appendChild(div);
+                                                                                        }
+
+                                                                                            // Adiciona uma nova cartela
+                                                                                                function addCartela() {
+                                                                                                          const cartela = {
+                                                                                                                    numeros: Array.from({ length: 5 }, () => Array(5).fill(null)), // Matriz 5x5
+                                                                                                                            serie: "0000"
+                                                                                                          };
+
+                                                                                                                const cartelaDiv = document.createElement('div');
+                                                                                                                      cartelaDiv.className = 'cartela-container';
+
+                                                                                                                            const serieInput = document.createElement('input');
+                                                                                                                                  serieInput.type = 'text';
+                                                                                                                                        serieInput.placeholder = 'Série';
+                                                                                                                                              serieInput.value = cartela.serie;
+                                                                                                                                                    serieInput.addEventListener('input', () => {
+                                                                                                                                                                cartela.serie = serieInput.value;
+                                                                                                                                                    });
+
+                                                                                                                                                          const cartelaGrid = document.createElement('div');
+                                                                                                                                                                cartelaGrid.className = 'cartela';
+
+                                                                                                                                                                      // Cria os números da cartela
+                                                                                                                                                                            cartela.numeros.forEach((row, rowIndex) => {
+                                                                                                                                                                                        row.forEach((_, colIndex) => {
+                                                                                                                                                                                                      const cell = document.createElement('div');
+                                                                                                                                                                                                                cell.textContent = '-';
+                                                                                                                                                                                                                          cell.addEventListener('click', () => {
+                                                                                                                                                                                                                                        const novoNumero = prompt("Digite o número:");
+                                                                                                                                                                                                                                                    if (novoNumero && !isNaN(novoNumero) && novoNumero >= 1 && novoNumero <= 75) {
+                                                                                                                                                                                                                                                                      cartela.numeros[rowIndex][colIndex] = parseInt(novoNumero);
+                                                                                                                                                                                                                                                                                    cell.textContent = novoNumero;
+                                                                                                                                                                                                                                                                                                  checkAllCartelas();
+                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                          });
+                                                                                                                                                                                                                                    cartelaGrid.appendChild(cell);
+                                                                                                                                                                                        });
+                                                                                                                                                                            });
+
+                                                                                                                                                                                  cartelaDiv.appendChild(serieInput);
+                                                                                                                                                                                        cartelaDiv.appendChild(cartelaGrid);
+                                                                                                                                                                                              cartelas.push(cartela);
+                                                                                                                                                                                                    document.getElementById('cartelas').appendChild(cartelaDiv);
+                                                                                                }
+
+                                                                                                    // Verifica todas as cartelas
+                                                                                                        function checkAllCartelas() {
+                                                                                                                  cartelas.forEach(cartela => {
+                                                                                                                            const isWin = checkCartela(cartela.numeros);
+                                                                                                                                    const cartelaContainer = cartela.numeros.flatMap((_, i) =>
+                                                                                                                                              document.querySelectorAll(".cartela-container")[i]
+                                                                                                                                                      );
+                                                                                                                                                              const status = document.createElement("div");
+                                                                                                                                                                      status.className = "status"; 
+                                                                                                                                                                              
+                                                                                                                  });
+                                                                                                        }
+
+                                                                                                            // Verifica linha 
+
+
+                                                                                                            
+                                                                                                                  })
+                                                                                                        }
+                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                          })
+                                                                                                                                                                                        })
+                                                                                                                                                                            })
+                                                                                                                                                    })
+                                                                                                          }
+                                                                                                }
+                                                                                                                                                }
+                                                                                                                                                }
+                                                                                                                    })
+                                                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
