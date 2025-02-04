@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Bingo - Marcador e Gerenciador de Cartelas</title>
-        <link href ="schetch.js">
+      <!--<link href ="schetch.js">-->
         <style>
             body {
                       font-family: Arial, sans-serif;
                             text-align: center;
             }
-                .grid {
-                          display: grid;
-                                grid-template-columns: repeat(15, 50px);
+            .grid {
+            display: grid;
+            grid-template-columns: repeat(15, 50px);
                                       gap: 5px;
                                             justify-content: center;
                                                   margin-top: 20px;
